@@ -1,5 +1,5 @@
 const root = document.querySelector("#root");
-const url = "https://api.thecatapi.com/v1/images/search";
+const catUrl = "https://api.thecatapi.com/v1/images/search";
 
 let loading = false;
 
@@ -25,10 +25,10 @@ function preload(src) {
 let cache = null;
 
 async function fetchCat() {
-  const response = await fetch(url);
-  const { url: src } = (await response.json())[0];
-  await preload(src);
-  return src;
+  const response = await fetch(catUrl);
+  const { url } = (await response.json())[0];
+  await preload(url);
+  return url;
 }
 
 async function getRandomCat() {
