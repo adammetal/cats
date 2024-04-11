@@ -21,8 +21,30 @@ function preload(src) {
   });
 }
 
-// ??????????????
-let cache = null;
+
+let cache;
+let cachePromise;
+
+async function getCachedCat() {
+  if (!cache) {
+    cache = await fetchCat();
+    const cat = await fetchCat();
+    return cat;
+  }
+
+  if (cachePromise) {
+    await cachePromise;
+    cachePromise = null;
+  }
+
+  const cat = cache;
+  cachePromise = fetchCat().then((url) => {
+    cache = url;
+    cachePromise = null;
+  })
+  
+  return cat;
+}
 
 async function fetchCat() {
   const response = await fetch(catUrl);
@@ -37,7 +59,7 @@ async function getRandomCat() {
   }
 
   startLoading();
-  const src = await fetchCat();
+  const src = await getCachedCat();
   stopLoading();
 
   root.innerHTML = "";
